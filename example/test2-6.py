@@ -2,7 +2,6 @@
 
 # Tensor product 点积运算
 
-
 import numpy as np
 
 # numpy中的点积运算
@@ -35,7 +34,6 @@ def naive_matrix_vector_dot(x, y):
         for j in range(x.shape[1]):
             z[i] += x[i, j] * y[j]
     return z
-
 
 # 矩阵和矩阵的点积
 # 当且仅当x.shape[1] == y.shape[0]时，你才可以计算它们的点积（dot(x, y)）。

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*
 
+# Constant tensors and variables
+
 import tensorflow as tf
 import numpy as np
 

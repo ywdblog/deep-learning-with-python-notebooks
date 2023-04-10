@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*
+# An end-to-end example: A linear classifier in pure TensorFlow
 
 import matplotlib.pyplot as plt
 import tensorflow as tf
@@ -42,17 +43,14 @@ output_dim = 1
 W = tf.Variable(initial_value=tf.random.uniform(shape=(input_dim, output_dim)))
 b = tf.Variable(initial_value=tf.zeros(shape=(output_dim,)))
 
-
 '''
 # 前向函数
 # The forward pass function
 # 预测值=输入*权重+偏置=[(2,1)*(1,1)]+[(1,1)]
 '''
 
-
 def model(inputs):
     return tf.matmul(inputs, W) + b
-
 
 # The mean squared error loss function
 def square_loss(targets, predictions):
@@ -61,10 +59,8 @@ def square_loss(targets, predictions):
     # tf.reduce_mean()计算张量的平均值
     return tf.reduce_mean(per_sample_losses)
 
-
 # the training loop
 learning_rate = 0.1
-
 
 # 一次就训练2000条
 def training_step(inputs, targets):
@@ -80,7 +76,6 @@ def training_step(inputs, targets):
     b.assign_sub(grad_loss_wrt_b * learning_rate)
     return loss
 
-
 # 批量训练步骤
 for step in range(40):
     loss = training_step(inputs, targets)
@@ -91,13 +86,11 @@ predictions = model(inputs)
 plt.scatter(inputs[:, 0], inputs[:, 1], c=predictions[:, 0] > 0.5)
 plt.show()
 
-
 # 对于给定点[x, y]，其预测值是prediction = [[w1],[w2]]•[x, y] + b = w1 * x + w2 * y + b
 # 因此类别0的定义是w1 *x + w2 * y + b < 0.5，类别1的定义是w1 * x + w2 * y + b > 0.5
 # 因此，我们可以将分类边界绘制为w1 * x + w2 * y + b = 0.5 （一条直线）
 # 可能习惯看到像y = a * x + b这种形式的直线方程，如果将我们的直线方程写成这种形式，那么它将变为：y = - w1 / w2 * x + (0.5 - b) / w2
 
-#
 x = np.linspace(-1, 4, 100)
 # 直线方程
 y = - W[0] / W[1] * x + (0.5 - b) / W[1]
