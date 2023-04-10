@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*
-
 #  Reimplementing our first example from scratch in TensorFlow
-
 
 from tensorflow.keras.datasets import mnist
 import math
@@ -9,16 +7,14 @@ import tensorflow as tf
 import sys
 imprt numpy as np
 
-
 class NaiveDense:
     def __init__(self, input_size, output_size, activation):
 
         # activation是一个逐元素的函数（通常是relu，但最后一层是softmax）
         self.activation = activation
 
-        w_shape = (input_size, output_size)
-
         # tf.random.uniform 生成一个形状为(2, 2)的张量，它的元素是在[0,1)区间内均匀分布的随机数
+        w_shape = (input_size, output_size)
         w_initial_value = tf.random.uniform(w_shape, minval=0, maxval=1e-1)
         self.W = tf.Variable(w_initial_value)
 
@@ -30,6 +26,7 @@ class NaiveDense:
 
     # 前向传播
     def __call__(self, inputs):
+        # tf.matmul()函数是矩阵乘法
         return self.activation(tf.matmul(inputs, self.W) + self.b)
 
     # 获取权重的快捷方法
@@ -38,8 +35,6 @@ class NaiveDense:
         return [self.W, self.b]
 
 # 将层连接起来
-
-
 class NaiveSequential:
     def __init__(self, layers):
         self.layers = layers
@@ -58,7 +53,6 @@ class NaiveSequential:
         for layer in self.layers:
             weights += layer.weights
         return weights
-
 
 class BatchGenerator:
     def __init__(self, images, labels, batch_size=128):
@@ -99,28 +93,22 @@ def one_training_step(model, images_batch, labels_batch):
     update_weights(gradients, model.weights)
     return average_loss
 
-
 learning_rate = 1e-3
 
 # 更新权重
 # 由于权重是tf.Variable类型的变量，所以可以直接使用assign_sub方法来更新权重
 # 学习率乘以梯度，然后减去这个值，就是更新后的权重
-
-# 一般不会手动更新权重，而是使用优化器来更新权重（见下面）
-
-
 def update_weights(gradients, weights):
     for g, w in zip(gradients, weights):
         w.assign_sub(g * learning_rate)
 
-
+# 一般不会手动更新权重，而是使用优化器来更新权重
 '''
 from tensorflow.keras import optimizers
 optimizer = optimizers.SGD(learning_rate=1e-3)
 def update_weights2(gradients, weights):
     optimizer.apply_gradients(zip(gradients, weights))
 '''
-
 
 def fit(model, images, labels, epochs, batch_size=128):
     for epoch_counter in range(epochs):
@@ -131,8 +119,6 @@ def fit(model, images, labels, epochs, batch_size=128):
             if batch_counter % 100 == 0:
                 print(f"loss at batch {batch_counter}: {loss:.2f}")
 
-
-###
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
 train_images = train_images.reshape((60000, 28 * 28))
@@ -145,10 +131,7 @@ model = NaiveSequential([
     NaiveDense(input_size=512, output_size=10, activation=tf.nn.softmax)
 ])
 
-
 fit(model, train_images, train_labels, epochs=10, batch_size=128)
-
-
 print(len(model.weights))
 # assert len(model.weights) == 4
 
@@ -164,7 +147,6 @@ predicted_labels = np.argmax(predictions, axis=1)
 # matches.mean() 就是预测正确的样本数除以总样本数
 matches = predicted_labels == test_labels
 print(f"accuracy: {matches.mean():.2f}")
-
 
 # 总结
 
