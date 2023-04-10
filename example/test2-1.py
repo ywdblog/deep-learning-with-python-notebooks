@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*
 
+
+# matplotlib
+# tensorflow
+
 # A first look at a neural network
 
 from tensorflow.keras.datasets import mnist
@@ -34,6 +38,9 @@ model = keras.Sequential([
 # 损失函数：loss="sparse_categorical_crossentropy"
 # 优化器：optimizer="rmsprop"
 # 指标：metrics=["accuracy"]
+# rmsprop 优化器是一种随机梯度下降方法，它使用了梯度平方的指数加权移动平均值来调整学习率
+# sparse_categorical_crossentropy 损失函数是用于多分类问题的交叉熵损失函数
+# metrics=["accuracy"] 表示精度
 model.compile(optimizer="rmsprop",
               loss="sparse_categorical_crossentropy",
               metrics=["accuracy"])
@@ -54,10 +61,11 @@ test_images = test_images.astype("float32") / 255
 # 训练模型
 # 为什么要将训练数据分为训练集和验证集？
 # epochs=5  为什么要训练5个周期？
-# batch_size=128 为什么要设置batch_size=128？
+# batch_size=128 为什么要设置batch_size=128？ 
+# batch_size 表示每次训练的样本数
 # 输出结果：loss: 0.0280 - accuracy: 0.9914 - val_loss: 0.0729 - val_accuracy: 0.9800
-# loss 表示训练集上的损失
-# accuracy 表示训练集上的精度
+# loss 表示训练集上的损失 损失表示模型的准确性
+# accuracy 表示训练集上的精度 
 model.fit(train_images, train_labels, epochs=5, batch_size=128)
 
 # 评估模型
@@ -66,7 +74,7 @@ test_digits = test_images[0:10]
 predictions = model.predict(test_digits)
 # predictions[0] 表示第一个数字的概率值
 # argmax() 返回最大值（概率）的索引
-# predictions[0][7] 表示第一个数字的第8个概率值
+# predictions[0][7] 表示第一个数字的第8个概率值，即数字7的概率值
 print(predictions[0], predictions[0].argmax(), predictions[0][7],test_labels[0])
 
 # 保存模型

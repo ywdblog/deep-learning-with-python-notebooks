@@ -2,10 +2,8 @@
 
 # Broadcasting
 
-
 from tkinter import Y
 import numpy as np
-
 
 # 如果将两个形状不同的张量相加，会发生什么？
 # 例如，我们将一个形状为(32, 10)的张量与形状为(10,)的张量相加
@@ -16,12 +14,10 @@ import numpy as np
 x = np.random.random((32, 10))
 y = np.random.random((10,))
 
-
 y = np.expand_dims(y, axis=0)
 Y = np.concatenate([y] * 32, axis=0)
 z = x+Y
 print(z, z.shape)
-
 
 # 现实世界中不用手动保持维度相同运算，不同维度的张量max运算（自动广播）
 x = np.random.random((64, 3, 32, 10))

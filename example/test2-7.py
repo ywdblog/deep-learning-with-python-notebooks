@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*
-
+import numpy as np
 # Tensor reshaping 张量变形
 
 # 变形后，张量的元素个数与初始张量相同
@@ -9,6 +9,7 @@ x = np.array([[0., 1.],
              [4., 5.]])
 
 x = x.reshape((6, 1))
+print(x)
 
 # 转置 transpose
 x = np.zeros((300, 20))
@@ -17,9 +18,9 @@ x = np.transpose(x)
 
 # 张量运算的几何解释
 
-# 1： 张量加法表示将两个张量的元素逐个相加，x + y，相当于平移（不是变形）
+# 1：张量加法表示将两个张量的元素逐个相加，x + y，相当于平移（不是变形）
 
-# 2： 对一个二维向量旋转theta角，可以通过与一个2*2的矩阵进行点积运算，R =[[cos(theta),-sin*(theta)],[sin(theta,cos(theta)]]   x = R * x
+# 2：对一个二维向量旋转theta角，可以通过与一个2*2的矩阵进行点积运算，R =[[cos(theta),-sin*(theta)],[sin(theta,cos(theta)]]   x = R * x
 # 缩放相当于在垂直方向和水平方向进行缩放，可以通过与一个2*2的矩阵进行点积运算，S = [[a,0],[0,b]]  x = S * x
 # 线性变换，与任意矩阵A进行点积运算，x = A * x，相当于对x进行了一个线性变换，旋转和缩放都是线性变换的情况
 

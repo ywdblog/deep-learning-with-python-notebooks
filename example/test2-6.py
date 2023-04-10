@@ -14,7 +14,6 @@ z = np.dot(x, y)
 
 # 两个向量的点积是一个标量，而且只有元素个数相同的向量才能进行点积运算
 
-
 def naive_vector_dot(x, y):
     assert len(x.shape) == 1
     assert len(y.shape) == 1

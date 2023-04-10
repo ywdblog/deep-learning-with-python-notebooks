@@ -15,7 +15,6 @@ import numpy as np
 
 # Element-wise operations python 实现（逐元素运算）
 
-
 def naive_relu(x):
     assert len(x.shape) == 2
 
@@ -25,7 +24,6 @@ def naive_relu(x):
             x[i, j] = max(x[i, j], 0)  # 逐元素修正
     return x
 
-
 def naive_add(x, y):
     assert len(x.shape) == 2
     assert x.shape == y.shape
@@ -34,7 +32,6 @@ def naive_add(x, y):
         for j in range(x.shape[1]):
             x[i, j] += y[i, j]  # 逐元素相加
     return x
-
 
 x = np.array([[-5, 78, 2, 34, 0],
               [6, 79, 3, 35, 1],
