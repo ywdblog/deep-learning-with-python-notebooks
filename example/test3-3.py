@@ -6,13 +6,15 @@ import tensorflow as tf
 import numpy as np
 import sys
 
+# 生成一些线性可分的数据：二维平面上的点，它们分为两个类别。生成方法是从一个具有特定协方差矩阵和特定均值的随机分布中抽取坐标来生成每一类点
+# 设定：两个点云的协方差矩阵相同，但均值不同。也就是说两个点云具有相同的形状，但位置不同。
+
 num_samples_per_class = 1000
 negative_samples = np.random.multivariate_normal(
     mean=[0, 3],
     cov=[[1, 0.5], [0.5, 1]],
     size=num_samples_per_class)
 
-# 协方差矩阵描述了点云的形状，均值则描述了点云在平面上的位置
 # mean: 均值，cov: 协方差，size: 样本数
 positive_samples = np.random.multivariate_normal(
     mean=[3, 0],
@@ -23,36 +25,37 @@ positive_samples = np.random.multivariate_normal(
 
 # np.vstack()沿着垂直方向堆叠数组构成一个新的数组
 inputs = np.vstack((negative_samples, positive_samples)).astype(np.float32)
-
+#print(len(inputs),inputs[1:4])
+ 
 # labels for each sample are 0 or 1
-# 前1000个是9，后1000个是1 [[0],[0]...[1],[1]]
+# 前1000个是0，后1000个是1 [[0],[0]...[1],[1]]
 # 如果inputs[0]属于类别0，则targets[i,0]为0 反之为1
 targets = np.vstack((np.zeros((num_samples_per_class, 1), dtype="float32"),
                      np.ones((num_samples_per_class, 1), dtype="float32")))
 
-
-# plt.scatter  画散点图 第一个参数是x轴的值，第二个参数是y轴的值，第三个参数是颜色
+# plt.scatter 画散点图 
+# 第一个参数是x,y轴的值（均值），第二个参数是形状（协方差），第三个参数是颜色
 plt.scatter(inputs[:, 0], inputs[:, 1], c=targets[:, 0])
 plt.show()
 
 # Creating the linear classifier variables
-input_dim = 2
 # 每个样本的输入是2维的，因此输入维度为2
 # 输出维度为1，因为我们只需要一个值来表示样本属于正类的概率，接近1表示属于正类，接近0表示属于负类
 output_dim = 1
+input_dim = 2
+
 W = tf.Variable(initial_value=tf.random.uniform(shape=(input_dim, output_dim)))
 b = tf.Variable(initial_value=tf.zeros(shape=(output_dim,)))
 
 '''
-# 前向函数
-# The forward pass function
-# 预测值=输入*权重+偏置=[(2,1)*(1,1)]+[(1,1)]
+# 前向函数 The forward pass function
+# W = [[w1], [w2]]
+# 预测值=输入*权重+偏置= prediction = [[w1], [w2]]•[x, y] + b = w1 * x + w2 * y + b。
 '''
-
 def model(inputs):
     return tf.matmul(inputs, W) + b
 
-# The mean squared error loss function
+# 均方误差损失函数 The mean squared error loss function
 def square_loss(targets, predictions):
     # tf.square()计算张量的平方
     per_sample_losses = tf.square(targets - predictions)
@@ -77,6 +80,7 @@ def training_step(inputs, targets):
     return loss
 
 # 批量训练步骤
+# 在所有数据上进行训练（计算梯度并更新权重），非小批量训练
 for step in range(40):
     loss = training_step(inputs, targets)
     print(f"Loss at step {step}: {loss:.4f}")
@@ -96,5 +100,3 @@ x = np.linspace(-1, 4, 100)
 y = - W[0] / W[1] * x + (0.5 - b) / W[1]
 plt.plot(x, y, "-r")
 plt.scatter(inputs[:, 0], inputs[:, 1], c=predictions[:, 0] > 0.5)
-
- 

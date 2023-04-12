@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*
+# Anatomy of a neural network: Understanding core Keras APIs
 
 import matplotlib.pyplot as plt
 import tensorflow as tf
