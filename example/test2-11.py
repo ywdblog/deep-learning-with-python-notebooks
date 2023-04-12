@@ -5,15 +5,16 @@ from tensorflow.keras.datasets import mnist
 import math
 import tensorflow as tf
 import sys
-imprt numpy as np
+import numpy as np
 
 class NaiveDense:
+    # 三个参数分别代表代表的意思
     def __init__(self, input_size, output_size, activation):
 
         # activation是一个逐元素的函数（通常是relu，但最后一层是softmax）
         self.activation = activation
 
-        # tf.random.uniform 生成一个形状为(2, 2)的张量，它的元素是在[0,1)区间内均匀分布的随机数
+        # tf.random.uniform 生成一个形状为w_shape的张量，它的元素是在minval，maxval区间内均匀分布的随机数
         w_shape = (input_size, output_size)
         w_initial_value = tf.random.uniform(w_shape, minval=0, maxval=1e-1)
         self.W = tf.Variable(w_initial_value)
@@ -24,7 +25,7 @@ class NaiveDense:
         # tf.Variable 类型的变量可以被自动求导，而普通的张量类型的变量则不行
         self.b = tf.Variable(b_initial_value)
 
-    # 前向传播
+    # 前向传播，它返回到是[<__main__.NaiveDense object at 0x0000028C55731510>, <__main__.NaiveDense object at 0x0000028C4A933D30>]
     def __call__(self, inputs):
         # tf.matmul()函数是矩阵乘法
         return self.activation(tf.matmul(inputs, self.W) + self.b)
@@ -34,13 +35,13 @@ class NaiveDense:
     def weights(self):
         return [self.W, self.b]
 
-# 将层连接起来
+# 将层连接起来具体是怎么连接起来的？
+# 这个input什么时候触发的？应该是images_batch
 class NaiveSequential:
     def __init__(self, layers):
         self.layers = layers
 
     def __call__(self, inputs):
-        print("inputs:", inputs)
         x = inputs
         for layer in self.layers:
             x = layer(x)
@@ -48,11 +49,18 @@ class NaiveSequential:
 
     @property
     def weights(self):
-        # 从每一层中获取权重
+        # 从每一层中获取权重（学到的知识）
         weights = []
         for layer in self.layers:
             weights += layer.weights
         return weights
+        '''
+        x= [3,4]
+        weights = []
+        for i in range(2):
+            weights += x 
+        print(weights) # [3,4,3,4]
+        '''
 
 class BatchGenerator:
     def __init__(self, images, labels, batch_size=128):
@@ -71,13 +79,12 @@ class BatchGenerator:
         self.index += self.batch_size
         return images, labels
 
-
+# 返回平均损失
 def one_training_step(model, images_batch, labels_batch):
     with tf.GradientTape() as tape:
-        # predictions返回的实际上是张量
+        # predictions返回的是张量
         predictions = model(images_batch)
-        # print("predictions", predictions)
-
+ 
         # 计算损失
         per_sample_losses = tf.keras.losses.sparse_categorical_crossentropy(
             labels_batch, predictions)
@@ -85,7 +92,6 @@ def one_training_step(model, images_batch, labels_batch):
         # 计算平均损失
         average_loss = tf.reduce_mean(per_sample_losses)
 
-    # 计算梯度
     # 计算损失相对权重的梯度，输出的gradients是一个列表，列表中的每个元素对应model.weights中的权重
     gradients = tape.gradient(average_loss, model.weights)
 
@@ -93,6 +99,7 @@ def one_training_step(model, images_batch, labels_batch):
     update_weights(gradients, model.weights)
     return average_loss
 
+# 学习率
 learning_rate = 1e-3
 
 # 更新权重
@@ -106,7 +113,7 @@ def update_weights(gradients, weights):
 '''
 from tensorflow.keras import optimizers
 optimizer = optimizers.SGD(learning_rate=1e-3)
-def update_weights2(gradients, weights):
+def update_weights(gradients, weights):
     optimizer.apply_gradients(zip(gradients, weights))
 '''
 
@@ -120,7 +127,6 @@ def fit(model, images, labels, epochs, batch_size=128):
                 print(f"loss at batch {batch_counter}: {loss:.2f}")
 
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
-
 train_images = train_images.reshape((60000, 28 * 28))
 train_images = train_images.astype("float32") / 255
 test_images = test_images.reshape((10000, 28 * 28))
@@ -132,7 +138,6 @@ model = NaiveSequential([
 ])
 
 fit(model, train_images, train_labels, epochs=10, batch_size=128)
-print(len(model.weights))
 # assert len(model.weights) == 4
 
 predictions = model(test_images)
