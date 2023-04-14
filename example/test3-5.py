@@ -4,13 +4,36 @@
 ### The base Layer class in Keras
 #### Automatic shape inference: Building layers on the fly
 
+
+'''
+问题：既然Keras的Layer类是所有层的基类，直接通过层的__call__()方法来调用，为什么还要实现call()和build()方法呢？主要原因就是为了能够及时更新状态
+
+ 
+在test2-11.py：
+model = NaiveSequential([
+    NaiveDense(input_size=28 * 28, output_size=512, activation=tf.nn.relu),
+    NaiveDense(input_size=512, output_size=10, activation=tf.nn.softmax)
+])
+层兼容性：下一层的输入维度必须与上一层的输出维度相同，如果不同，需要在层中指定输入维度
+
+其实keras中能自己解决这个问题，只需要在第一层中指定输入维度即可，如下：
+layer = layers.Dense(32, activation="relu")
+model = models.Sequential([
+    layers.Dense(32, activation="relu"),
+    layers.Dense(32)
+])
+'''
+
+'''
+为了在NaiveDense中实现自动推断输入维度，需要在build()方法中获取输入的形状，然后根据输入的形状来创建权重，这样就可以在__call__()方法中直接调用call()方法了，就是SimpleDense的实现方式
+'''
+
 from tensorflow import keras
 import tensorflow as tf
 import sys 
 
 import numpy as np
  
-
 class SimpleDense(keras.layers.Layer):
 
     def __init__(self, units, activation=None):
@@ -44,22 +67,6 @@ model = keras.Sequential([
     SimpleDense(32, activation="relu"),
     SimpleDense(10, activation="softmax")
 ])
-
-'''
-在test2-11.py：
-model = NaiveSequential([
-    NaiveDense(input_size=28 * 28, output_size=512, activation=tf.nn.relu),
-    NaiveDense(input_size=512, output_size=10, activation=tf.nn.softmax)
-])
-层兼容性：下一层的输入维度必须与上一层的输出维度相同，如果不同，需要在层中指定输入维度
-其实keras中能自己解决这个问题，只需要在第一层中指定输入维度即可，如下：
-layer = layers.Dense(32, activation="relu")
-model = models.Sequential([
-    layers.Dense(32, activation="relu"),
-    layers.Dense(32)
-])
-那么在SimpleDense自己实现怎么做呢？定义一个__call__()方法
-'''
 
 model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
 
