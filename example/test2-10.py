@@ -41,6 +41,7 @@ print(f"test_acc: {test_acc}")
  
 from tensorflow.keras.models import load_model
 loadmodel = load_model("model2-9.h5")
+# evaluate() 方法返回损失值和指标值
 test_loss, test_acc = loadmodel.evaluate(test_images, test_labels)
 print(f"test_acc: {test_acc}")
 
