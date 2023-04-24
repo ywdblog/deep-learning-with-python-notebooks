@@ -58,11 +58,10 @@ callbacks = [
     keras.callbacks.ModelCheckpoint("binary_2gram.keras",
     save_best_only=True)
 ]
-
-
+ 
 model = get_model()
 model.summary()
-model.fit(binay_2gram_train_ds, epochs=1, validation_data=binay_2gram_val_ds,callback=callbacks)
+model.fit(binay_2gram_train_ds, epochs=1, validation_data=binay_2gram_val_ds,callbacks=callbacks)
 
 model = keras.models.load_model("binary_2gram.keras")
 print(f"Test acc: {model.evaluate(binay_2gram_test_ds)[1]:.3f}")

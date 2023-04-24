@@ -40,7 +40,7 @@ for inputs,targets in train_ds:
  
 ### Preparing integer sequence datasets
 # layers.TextVectorization 层将文本转换为整数序列
-max_length = 20000 # error 输入 600 会报错 但使用lstm就没错，将test11-5.py
+max_length = 600
 max_tokens = 20000
 text_vectorization = layers.TextVectorization(
     max_tokens=max_tokens,
@@ -66,11 +66,8 @@ int_test_ds = test_ds.map(
 
 import tensorflow as tf
 inputs = keras.Input(shape=(None,), dtype="int64")
-# tf.one_hot 将整数序列转换为one-hot编码的二进制向量序列
-inputs = tf.one_hot(inputs, depth=max_tokens)
-  
-x = layers.Dense(16,activation="relu")(inputs) 
-# layers.Dropout 将dropout应用于输入 
+embedded = tf.one_hot(inputs, depth=max_tokens)
+x = layers.Bidirectional(layers.LSTM(32))(embedded)
 x = layers.Dropout(0.5)(x)
 outputs = layers.Dense(1, activation="sigmoid")(x)
 model = keras.Model(inputs, outputs)
@@ -79,13 +76,12 @@ model.compile(optimizer="rmsprop",
               metrics=["accuracy"])
 model.summary()
 
-### Training a first basic sequence model 一元语法
+### Training a first basic sequence model (lstm)
 
 callbacks = [
     keras.callbacks.ModelCheckpoint("one_hot_bidir_lstm.keras",
                                     save_best_only=True)
 ]
- 
-model.fit(int_train_ds, validation_data=int_val_ds, epochs=1, callbacks=callbacks)
+model.fit(int_train_ds, validation_data=int_val_ds, epochs=10, callbacks=callbacks)
 model = keras.models.load_model("one_hot_bidir_lstm.keras")
 print(f"Test acc: {model.evaluate(int_test_ds)[1]:.3f}")
