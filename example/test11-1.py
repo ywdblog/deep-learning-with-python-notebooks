@@ -1,3 +1,8 @@
+# Python achieve TextVectorization  
+# （1）Text standardization
+# （2）Text splitting (tokenization)
+# （3）Vocabulary Index 
+
 import string
 
 class Vectorizer:

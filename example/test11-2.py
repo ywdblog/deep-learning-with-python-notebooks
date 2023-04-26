@@ -3,6 +3,9 @@ import re
 import string
 import tensorflow as tf
 
+# Using the TextVectorization layer
+
+
 # test11-1.py 中的实现方式并不高效，因为它需要在内存中存储整个词汇表，这会导致内存不足的问题，可采用如下方式解决
 
 # 文本向量化

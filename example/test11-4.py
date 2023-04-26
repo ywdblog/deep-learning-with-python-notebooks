@@ -1,5 +1,6 @@
-#  Processing words as a sequence: The sequence model approach
-## 理解二元语法
+# Two approaches for representing groups of words: Sets and sequences
+## Processing words as a set: The bag-of-words approach
+### Bigrams with binary encoding
 
 import os, pathlib, shutil, random
 from tensorflow import keras
