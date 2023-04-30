@@ -22,6 +22,10 @@ test_ds = keras.utils.text_dataset_from_directory(
 )
 
 
+# 二元语法点两个变体
+## count：可以为二元语法表示添加更多的信息，方法就是计算每个单词或每个N元语法的出现次数（文本的词频直方图）
+## TF-IDF：将单词计数减去均值并除以方差，对其进行规范化（均值和方差是对整个训练数据集进行计算得到的），但独热编码稀疏性很大，将每个特征都减去均值，那么就会破坏稀疏性，无论使用哪种规范化方法，都应该只用除法。那用什么作分母呢，TF-IDF表示词频–逆文档频次
+
 text_vectorization = layers.TextVectorization(
     ngrams = 2,
     max_tokens=20000,
@@ -42,7 +46,6 @@ tfidf_2gram_val_ds = val_ds.map(
 tfidf_2gram_test_ds = test_ds.map(
     lambda x, y: (text_vectorization(x), y),
     num_parallel_calls=1)
-
 
 def get_model(max_token=20000, hidden_dim=16):
     inputs = keras.Input(shape=(max_token,))
@@ -69,10 +72,16 @@ model.fit(tfidf_2gram_train_ds.cache(),
 model = keras.models.load_model("tfidf_2gram.keras")
 print(f"Test acc: {model.evaluate(tfidf_2gram_test_ds)[1]:.3f}")
 
+### 导出能够处理原始字符串的模型
+# 在前面的例子中，将文本标准化、拆分和建立索引都作为tf.data管道的一部分。但如果想导出一个独立于这个管道的模型，我们应该确保模型包含文本预处理（否则需要在生产环境中重新实现，这可能很困难，或者可能导致训练数据与生产数据之间的微妙差异，在keras中很简单
 
+# shape=(1,)表示输入是一个字符串
 inputs = keras.Input(shape=(1,), dtype="string")
+# 应用文本预处理
 processed_inputs = text_vectorization(inputs)
+# 应用前面训练好的模型
 outputs = model(processed_inputs)
+# 将端到端的模型实例化
 inference_model = keras.Model(inputs, outputs)
 
 import tensorflow as tf
@@ -81,3 +90,8 @@ raw_text_data = tf.convert_to_tensor([
 ])
 predictions = inference_model(raw_text_data)
 print(f"{float(predictions[0] * 100):.2f} percent positive")
+
+ 
+
+
+ 

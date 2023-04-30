@@ -2,9 +2,16 @@
 ##  Processing words as a sequence: The sequence model approach
 ### LSTM model && onehot encoding
 
+'''
+如果不手动寻找基于顺序的特征，而是让模型直接观察原始单词序列并自己找出这样的特征，这种方法称为序列模型（sequence model）或序列处理（sequence processing）。
+要实现序列模型，首先需要将输入样本表示为整数索引序列（每个整数代表一个单词）。然后，将每个整数映射为一个向量，得到向量序列。最后，将这些向量序列输入层的堆叠，这些层可以将相邻向量的特征交叉关联，它可以是一维卷积神经网络、RNN或Transformer
+'''
+
 import os, pathlib, shutil, random
 from tensorflow import keras
 from tensorflow.keras import layers
+import sys 
+
 batch_size = 32
 base_dir = pathlib.Path("aclImdb")
 val_dir = base_dir / "val"
@@ -66,11 +73,13 @@ int_test_ds = test_ds.map(
   
 ### A sequence model built on one-hot encoded vector sequences
 import tensorflow as tf
-# shape=(None,)   None表示任意长度的序列，逗号表示这是一个一维向量
+# shape=(None,)  None表示任意长度的序列，逗号表示这是一个一维向量
 inputs = keras.Input(shape=(None,), dtype="int64")
 # tf.one_hot 将整数序列转换为形状为（sequence_length, max_tokens）的二进制矩阵，sequence_length是输入序列的长度，max_tokens是词表大小 
-# 最终得到一个(600,20000) 二维矩阵，600是每个样本的长度（限定了），20000是词表大小
+# 最终得到一个(600,20000) 二维矩阵，600是每个样本的长度（限定），20000是词表大小
 embedded = tf.one_hot(inputs, depth=max_tokens)
+print(embedded.shape) # (None, None, 20000)
+ 
  
 x = layers.Bidirectional(layers.LSTM(32))(embedded)
 x = layers.Dropout(0.5)(x)
@@ -90,3 +99,5 @@ callbacks = [
 model.fit(int_train_ds, validation_data=int_val_ds, epochs=10, callbacks=callbacks)
 model = keras.models.load_model("one_hot_bidir_lstm.keras")
 print(f"Test acc: {model.evaluate(int_test_ds)[1]:.3f}")
+
+# 这种方法的缺点：每个输入样本被编码成尺寸为(600,20000)的矩阵（每个样本包含600个单词，共有20 000个可能的单词）。一条影评就有12 000 000个浮点数，双向LSTM需要做很多工作

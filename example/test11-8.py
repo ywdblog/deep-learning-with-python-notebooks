@@ -1,12 +1,9 @@
 # Two approaches for representing groups of words: Sets and sequences
 ##  Processing words as a sequence: The sequence model approach
 ### Learning word embeddings with the Embedding layer
+#### 处理掩码序列的Embedding层 Understanding padding and masking
 
-
-# 词嵌入空间通常包含上千个可解释（性别，年龄）的向量，它们可能都很有用
-## （1）从头开始训练词向量，一开始是随机的词向量，然后对这些词向量进行学习，学习方式与学习神经网络权重相同。 
-## 世界上有许多种语言，它们之间并不是同构的，因为语言反映的是特定文化和特定背景，某些语义关系的重要性因任务而异，所以一般对每个任务学习新的嵌入空间。
-
+ 
 import os, pathlib, shutil, random
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -47,16 +44,18 @@ int_test_ds = test_ds.map(
     lambda x, y: (text_vectorization(x), y),
     num_parallel_calls=1)
 
+# extVectorization层中使用了output_sequence_length=max_length选项（max_length为600），如果不够600，就会在序列的末尾填充0，使其长度达到600，从而能够与其它序列对齐。
+# 双向RNN模型，正序处理单元，在最后的迭代只会看到表示填充的0的掩码，如果原始句子很短，那么这个模型就会看到很多0，这样就会影响模型的性能，存储在RNN中的信息就会被淹没在0中。
+# 需要用某种方式来告诉RNN，它应该跳过这些迭代。有一个API可以实现此功能：掩码（masking）。
+
 inputs = keras.Input(shape=(None,), dtype="int64")
-# 输入形状(batch_size, sequence_length)，输出是(batch_size, sequence_length, embedding_dimension)的3阶浮点数张量
+# mask_zero=True 表示将输入中的0作为掩码，这样RNN不会在输入中的0上执行任何计算
 embedded = layers.Embedding(
     input_dim=max_tokens, output_dim=256, mask_zero=True)(inputs)
-x = layers.Bidirectional(layers.LSTM(32))(embedded) #LSTM只需要处理256维的向量序列，而不是2000维的序列
+x = layers.Bidirectional(layers.LSTM(32))(embedded)
 x = layers.Dropout(0.5)(x)
 outputs = layers.Dense(1, activation="sigmoid")(x)
 model = keras.Model(inputs, outputs)
-# 将Embedding层实例化时，它的权重（内部的词向量字典）是随机初始化的，就像其他层一样。
-# 在训练过程中，利用反向传播来逐渐调节这些词向量，改变空间结构，使其可以被下游模型利用。
 model.compile(optimizer="rmsprop",
               loss="binary_crossentropy",
               metrics=["accuracy"])

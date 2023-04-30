@@ -1,7 +1,7 @@
 # Two approaches for representing groups of words: Sets and sequences
 ## Processing words as a set: The bag-of-words approach
-### Bigrams with binary encoding
-
+### Bigrams with binary encoding（二元语法）
+ 
 import os, pathlib, shutil, random
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -20,7 +20,7 @@ test_ds = keras.utils.text_dataset_from_directory(
     "aclImdb/test", batch_size=batch_size
 )
 
-
+# 二元语法将局部顺序信息重新注入词袋表示法
 text_vectorization = layers.TextVectorization(
     ngrams = 2,
     max_tokens=20000,
@@ -33,7 +33,6 @@ text_vectorization.adapt(text_only_train_ds)
 binay_2gram_train_ds = train_ds.map(
     lambda x, y: (text_vectorization(x), y),
     num_parallel_calls=1)
-
 
 binay_2gram_val_ds = val_ds.map(
     lambda x, y: (text_vectorization(x), y),
@@ -66,6 +65,3 @@ model.fit(binay_2gram_train_ds, epochs=1, validation_data=binay_2gram_val_ds,cal
 
 model = keras.models.load_model("binary_2gram.keras")
 print(f"Test acc: {model.evaluate(binay_2gram_test_ds)[1]:.3f}")
-
-
- 
