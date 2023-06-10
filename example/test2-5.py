@@ -14,6 +14,7 @@ import numpy as np
 x = np.random.random((32, 10))
 y = np.random.random((10,))
 
+# 手动广播
 y = np.expand_dims(y, axis=0)
 Y = np.concatenate([y] * 32, axis=0)
 z = x+Y

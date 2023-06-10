@@ -6,8 +6,9 @@ import tensorflow as tf
 import numpy as np
 import sys
 
-# 生成一些线性可分的数据：二维平面上的点，它们分为两个类别。生成方法是从一个具有特定协方差矩阵和特定均值的随机分布中抽取坐标来生成每一类点
-# 设定：两个点云的协方差矩阵相同，但均值不同。也就是说两个点云具有相同的形状，但位置不同。
+# 生成一些线性可分的数据：二维平面上的点，它们分为两个类别。
+# 生成方法是从一个具有特定协方差矩阵和特定均值的随机分布中抽取坐标来生成每一类点
+# 设定：两个点云的协方差矩阵相同（两个点云具有相同的形状），但均值不同(位置不同)
 
 num_samples_per_class = 1000
 negative_samples = np.random.multivariate_normal(
@@ -29,7 +30,6 @@ inputs = np.vstack((negative_samples, positive_samples)).astype(np.float32)
  
 # labels for each sample are 0 or 1
 # 前1000个是0，后1000个是1 [[0],[0]...[1],[1]]
-# 如果inputs[0]属于类别0，则targets[i,0]为0 反之为1
 targets = np.vstack((np.zeros((num_samples_per_class, 1), dtype="float32"),
                      np.ones((num_samples_per_class, 1), dtype="float32")))
 

@@ -6,7 +6,7 @@
 
 '''
 不同类型的层适用于不同的张量格式和不同类型的数据处理：
-- Keras的Dense累：全链接层，向量数据存储中shape为(sample,features)的二阶张量中
+- Keras的Dense类：全链接层，向量数据存储中shape为(sample,features)的二阶张量中
 - 循环层（LSTM活Conv1D）：(sample,timesteps,features)的三阶张量中
 - 二维卷积层(Conv2D)：图像数据
 '''

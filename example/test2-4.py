@@ -22,7 +22,14 @@ def naive_relu(x):
     for i in range(x.shape[0]):
         for j in range(x.shape[1]):
             x[i, j] = max(x[i, j], 0)  # 逐元素修正
+            
     return x
+
+# np.maximum()函数是逐元素比较两个张量，返回一个新的张量，其中包含了两个输入张量中元素较大的值
+def naive_relu_np(x):
+    assert len(x.shape) == 2
+
+    return np.maximum(x, 0)
 
 def naive_add(x, y):
     assert len(x.shape) == 2
@@ -32,7 +39,7 @@ def naive_add(x, y):
         for j in range(x.shape[1]):
             x[i, j] += y[i, j]  # 逐元素相加
     return x
-
+ 
 x = np.array([[-5, 78, 2, 34, 0],
               [6, 79, 3, 35, 1],
               [7, 80, 4, 36, 2]])

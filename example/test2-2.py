@@ -47,7 +47,7 @@ print(x, x.ndim, x.shape)
 # 60000个矩阵组成的数组，每个矩阵是28*28的整数矩阵，值在0~255之间
 (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
 
-# ndim 属性，它是张量的轴的个数（秩）
+# ndim 属性，它是张量的轴的个数
 print(train_images.ndim)
 # shape 属性，它是张量的轴的尺寸组成的元组 轴的维度大小（元素个数）
 print(train_images.shape)  # (60000, 28, 28)

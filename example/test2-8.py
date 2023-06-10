@@ -28,7 +28,6 @@ with tf.GradientTape() as tape:
 # grad_of_y_wrt_x 也是一个张量，它的形状与x相同，表示 y = 2 * x + 3 在x = [[0,0],[0,0]] 附近的曲率
 grad_of_y_wrt_x = tape.gradient(y, x)
 
-
 # tf.random.uniform 生成一个形状为(2, 2)的张量，它的元素是在[0,1)区间内均匀分布的随机数
 W = tf.Variable(tf.random.uniform((2, 2)))
 # 形状为(2,)的零张量

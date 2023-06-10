@@ -30,7 +30,6 @@ test_images = test_images.astype("float32") / 255
 # 对于每批数据，模型会计算损失相对于权重的梯度（利用反向传播算法，这一算法源自微积分的链式法则），并将权重沿着减小该批量对应损失值的方向移动
 model.fit(train_images, train_labels, epochs=5, batch_size=128)
 
- 
 test_digits = test_images[0:10]
 predictions = model.predict(test_digits) 
 print(predictions[0], predictions[0].argmax(), predictions[0][7],test_labels[0])

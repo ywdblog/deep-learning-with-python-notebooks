@@ -8,7 +8,7 @@ import sys
 import numpy as np
 
 class NaiveDense:
-    # 三个参数分别代表代表的意思
+ 
     def __init__(self, input_size, output_size, activation):
 
         # activation是一个逐元素的函数（通常是relu，但最后一层是softmax）

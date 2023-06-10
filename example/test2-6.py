@@ -22,7 +22,6 @@ def naive_vector_dot(x, y):
         z += x[i] * y[i]
     return z
 
-
 # 矩阵和向量的点积
 # 矩阵x和一个向量y做点积运算，其返回值是一个向量，其中每个元素是y和x每一行的点积，也就是x的第一维度的大小和y的第0维必须相同
 def naive_matrix_vector_dot(x, y):
