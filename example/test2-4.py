@@ -15,6 +15,7 @@ import numpy as np
 
 # Element-wise operations python 实现（逐元素运算）
 
+# 要求两个输入张量具有相同的形状
 def naive_relu(x):
     assert len(x.shape) == 2
 
@@ -26,9 +27,9 @@ def naive_relu(x):
     return x
 
 # np.maximum()函数是逐元素比较两个张量，返回一个新的张量，其中包含了两个输入张量中元素较大的值
+# 可以理解为对naive_relu()函数的优化和封装
 def naive_relu_np(x):
     assert len(x.shape) == 2
-
     return np.maximum(x, 0)
 
 def naive_add(x, y):

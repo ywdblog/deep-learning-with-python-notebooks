@@ -32,14 +32,17 @@ print(x, x.ndim, x.shape)  # （3,5）
 # Rank-3 and higher-rank tensors
 x = np.array([[[5, 78, 2, 34, 0],
                [6, 79, 3, 35, 1],
+               [7, 80, 4, 36, 2],
                [7, 80, 4, 36, 2]],
               [[5, 78, 2, 34, 0],
                [6, 79, 3, 35, 1],
+               [7, 80, 4, 36, 2],
                [7, 80, 4, 36, 2]],
               [[5, 78, 2, 34, 0],
                [6, 79, 3, 35, 1],
+               [7, 80, 4, 36, 2],
                [7, 80, 4, 36, 2]]])
-print(x, x.ndim, x.shape)
+print(x, x.ndim, x.shape) # 3 (3, 4, 5)
 
 
 # 加载数据
@@ -52,7 +55,7 @@ print(train_images.ndim)
 # shape 属性，它是张量的轴的尺寸组成的元组 轴的维度大小（元素个数）
 print(train_images.shape)  # (60000, 28, 28)
 # dtype 属性，它是张量中所包含数据的类型
-print(train_images.dtype)
+print(train_images.dtype) #uint8
 
 # 显示第五张图像
 digit = train_images[4]
