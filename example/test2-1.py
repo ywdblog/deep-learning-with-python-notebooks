@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*
-
-
 # matplotlib
 # tensorflow
 
@@ -45,10 +43,9 @@ model.compile(optimizer="rmsprop",
               loss="sparse_categorical_crossentropy",
               metrics=["accuracy"])
 
-
 # 准备图像数据
-# 将图像数据从整数转换为浮点数（原因）
-# 将图像数据从三维数组转换为二维数组（原因）
+# 将图像数据从整数转换为浮点数
+# 将图像数据从三维数组转换为二维数组
 # 将图像数据归一化
 train_images = train_images.reshape((60000, 28 * 28))
 train_images = train_images.astype("float32") / 255
@@ -90,6 +87,3 @@ loadmodel = load_model("model.h5")
 #loadmodel.evaluate 表示在测试集上评估模型
 test_loss, test_acc = loadmodel.evaluate(test_images, test_labels)
 print(f"test_acc: {test_acc}")
-
-
- 

@@ -35,8 +35,7 @@ class NaiveDense:
     def weights(self):
         return [self.W, self.b]
 
-# 将层连接起来具体是怎么连接起来的？
-# 这个input什么时候触发的？应该是images_batch
+# 将层连接起来，封装了一个层列表，从而形成一个模型
 class NaiveSequential:
     def __init__(self, layers):
         self.layers = layers
@@ -49,7 +48,7 @@ class NaiveSequential:
 
     @property
     def weights(self):
-        # 从每一层中获取权重（学到的知识）
+        # 从每一层中获取权重（学到的知识），权重是一个列表
         weights = []
         for layer in self.layers:
             weights += layer.weights
@@ -62,6 +61,7 @@ class NaiveSequential:
         print(weights) # [3,4,3,4]
         '''
 
+# 对数据进行小批量迭代处理
 class BatchGenerator:
     def __init__(self, images, labels, batch_size=128):
         assert len(images) == len(labels)
@@ -79,7 +79,11 @@ class BatchGenerator:
         self.index += self.batch_size
         return images, labels
 
-# 返回平均损失
+# 进行一次训练
+## 计算模型得到预测值
+## 计算损失
+## 计算损失相对权重的梯度
+## 将权重源着梯度的反反向移动一小步
 def one_training_step(model, images_batch, labels_batch):
     with tf.GradientTape() as tape:
         # predictions返回的是张量
@@ -117,6 +121,7 @@ def update_weights(gradients, weights):
     optimizer.apply_gradients(zip(gradients, weights))
 '''
 
+# 完整的训练过程
 def fit(model, images, labels, epochs, batch_size=128):
     for epoch_counter in range(epochs):
         batch_generator = BatchGenerator(images, labels)
@@ -140,6 +145,8 @@ model = NaiveSequential([
 fit(model, train_images, train_labels, epochs=10, batch_size=128)
 # assert len(model.weights) == 4
 
+
+# 在测试集上进行评估
 predictions = model(test_images)
 # predictions.numpy 返回的是一个numpy数组
 predictions = predictions.numpy()

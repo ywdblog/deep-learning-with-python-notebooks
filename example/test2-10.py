@@ -15,12 +15,11 @@ model = keras.Sequential([
 ])
 
 # sparse_categorical_crossentropy 是损失函数，用于学习权重张量的反馈信号，在训练过程中，模型会尽量最小化这个损失函数
-# rmsprop 是优化器，用于根据模型看到的数据和自身的损失函数更新模型的权重
-# 降低损失值是通过小批量随机梯度下降来实现的。梯度下降的具体方法由第一个参数就是optimizer的值来指定
+# 降低损失值是通过小批量随机梯度下降来实现的。梯度下降的具体方法由第一个参数就是optimizer的值来指定优化器（用于根据模型看到的数据和自身的损失函数更新模型的权重）
 model.compile(optimizer="rmsprop",
               loss="sparse_categorical_crossentropy",
               metrics=["accuracy"])
-
+              
 train_images = train_images.reshape((60000, 28 * 28))
 train_images = train_images.astype("float32") / 255
 test_images = test_images.reshape((10000, 28 * 28))
@@ -34,12 +33,12 @@ test_digits = test_images[0:10]
 predictions = model.predict(test_digits) 
 print(predictions[0], predictions[0].argmax(), predictions[0][7],test_labels[0])
  
-model.save("model2-9.h5")
+model.save("model2-10.h5")
 test_loss, test_acc = model.evaluate(test_images, test_labels)
 print(f"test_acc: {test_acc}")
  
 from tensorflow.keras.models import load_model
-loadmodel = load_model("model2-9.h5")
+loadmodel = load_model("model2-10.h5")
 # evaluate() 方法返回损失值和指标值
 test_loss, test_acc = loadmodel.evaluate(test_images, test_labels)
 print(f"test_acc: {test_acc}")
