@@ -10,6 +10,7 @@ with tf.GradientTape() as tape:
 # 计算结果相对输入梯度
 gradient = tape.gradient(result, input_var)
 print("result1:", gradient)
+print("result2:", input_var.gradient)
 
 input_const = tf.constant(3.)
 with tf.GradientTape() as tape:
