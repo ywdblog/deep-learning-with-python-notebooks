@@ -8,11 +8,11 @@ import numpy as np
 x = np.random.random((32,))
 y = np.random.random((32,))
 z = np.dot(x, y)
+print(z)
 
 # python 原生实现的点积运算
 
 # 两个向量的点积是一个标量，而且只有元素个数相同的向量才能进行点积运算
-
 def naive_vector_dot(x, y):
     assert len(x.shape) == 1
     assert len(y.shape) == 1
@@ -21,6 +21,11 @@ def naive_vector_dot(x, y):
     for i in range(x.shape[0]):
         z += x[i] * y[i]
     return z
+
+x = np.random.random((32,))
+y = np.random.random((32,))
+z = naive_vector_dot(x, y)
+print("原生实现：",z)
 
 # 矩阵和向量的点积
 # 矩阵x和一个向量y做点积运算，其返回值是一个向量，其中每个元素是y和x每一行的点积，也就是x的第一维度的大小和y的第0维必须相同
@@ -33,6 +38,11 @@ def naive_matrix_vector_dot(x, y):
         for j in range(x.shape[1]):
             z[i] += x[i, j] * y[j]
     return z
+
+x = np.random.random((3, 5))
+y = np.random.random((5,))
+z = naive_matrix_vector_dot(x, y)
+print("矩阵和向量的点积：",z, z.shape)
 
 # 矩阵和矩阵的点积
 # 当且仅当x.shape[1] == y.shape[0]时，你才可以计算它们的点积（dot(x, y)）。
@@ -48,3 +58,8 @@ def naive_matrix_dot(x, y):
             column_y = y[:, j]
             z[i, j] = naive_vector_dot(row_x, column_y)
     return z
+
+x = np.random.random((3, 2))
+y = np.random.random((2, 4))
+z = naive_matrix_dot(x, y)
+print("矩阵和矩阵的点积：",z, z.shape)
