@@ -2,6 +2,18 @@
 
 import tensorflow as tf
 
+w_shape = (5, 10)
+w_initial_value = tf.random.uniform(w_shape, minval=0, maxval=1e-1)
+# print("w_initial_value:", w_initial_value, w_initial_value.shape)
+
+b_shape = (10,)
+b_initial_value = tf.zeros(b_shape)
+
+z =  w_initial_value+b_initial_value
+print("z:", z, z.shape)
+
+exit()
+
 # 1:GradientTape API的使用
 # GradientTape API可以用来记录张量的运算过程，然后利用梯度带求导数
 
@@ -20,15 +32,23 @@ with tf.GradientTape() as tape:
 grad_of_y_wrt_x = tape.gradient(y, x)
 print("result1:", grad_of_y_wrt_x)
 
+
+
+
+
 # 2：GradientTape 也可用于张量运算
 
 # 形状为(2,2)的零张量
 x = tf.Variable(tf.random.uniform((2, 2)))
+print("x:", x)
 with tf.GradientTape() as tape:
     y = 2 * x + 3
 # grad_of_y_wrt_x 也是一个张量，它的形状与x相同，表示 y = 2 * x + 3 在x = [[0,0],[0,0]] 附近的曲率
 grad_of_y_wrt_x = tape.gradient(y, x)
+print("result2:", grad_of_y_wrt_x)
+# result2: tf.Tensor([[2. 2.][2. 2.]], shape=(2, 2), dtype=float32)
 
+ 
 # 3：变量列表
 
 # tf.random.uniform 生成一个形状为(2, 2)的张量，它的元素是在[0,1)区间内均匀分布的随机数

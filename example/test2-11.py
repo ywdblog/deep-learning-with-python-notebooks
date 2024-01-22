@@ -40,6 +40,7 @@ class NaiveSequential:
     def __init__(self, layers):
         self.layers = layers
 
+    # __call__方法可以让类的实例像函数一样被调用
     def __call__(self, inputs):
         x = inputs
         for layer in self.layers:
